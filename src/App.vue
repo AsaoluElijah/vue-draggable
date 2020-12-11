@@ -1,28 +1,28 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <rough-bar
+      :data="{
+        labels: ['North', 'South', 'East', 'West'],
+        values: [10, 5, 8, 3],
+      }"
+      title="Regions"
+      roughness="8"
+      :colors="['red', 'orange', 'blue', 'skyblue']"
+      stroke="black"
+      stroke-width="3"
+      fill-style="cross-hatch"
+      fill-weight="3.5"
+      class="d-inline"
+    />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { RoughBar } from "vue-roughviz";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+    RoughBar,
+  },
+};
+</script> 
