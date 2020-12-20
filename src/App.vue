@@ -2,32 +2,18 @@
   <div id="app">
     <div class="d-inline-block">
       <rough-bar
+        v-if="chartValue.length > 0"
         :data="{
-          labels: ['North', 'South', 'East', 'West'],
-          values: [10, 5, 8, 3],
+          labels: chartLabel,
+          values: chartValue,
         }"
-        title="Regions"
-        roughness="8"
-        :colors="['red', 'orange', 'blue', 'skyblue']"
+        title="BTC - 10 Days"
+        roughness="3"
+        color="#ccc"
         stroke="black"
-        stroke-width="3"
-        fill-style="cross-hatch"
-        fill-weight="3.5"
-      />
-    </div>
-    <div class="d-inline-block">
-      <rough-pie
-        :data="{
-          labels: ['North', 'South', 'East', 'West'],
-          values: [10, 5, 8, 3],
-        }"
-        title="Covid-19 Chart"
-        roughness="8"
-        :colors="['red', 'orange', 'blue', 'skyblue']"
-        stroke="black"
-        stroke-width="3"
-        fill-style="cross-hatch"
-        fill-weight="3.5"
+        stroke-width="1"
+        fill-style="zig-zag"
+        fill-weight="2"
       />
     </div>
   </div>
@@ -35,12 +21,38 @@
 
 <script>
 import { RoughBar } from "vue-roughviz";
-import { RoughPie } from "vue-roughviz";
 export default {
   name: "App",
   components: {
     RoughBar,
-    RoughPie,
+  },
+  data() {
+    return {
+      chartLabel: [],
+      chartValue: [],
+    };
+  },
+  methods: {
+    async loadData() {
+      await fetch(
+        "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=10&interval=daily"
+      )
+        .then((res) => res.json())
+        .then((rawData) => {
+          console.table(rawData.prices);
+          rawData.prices.map((data) => {
+            let date = new Date(data[0]).toDateString();
+            let rPrice = data[1];
+            console.log(`Price of 1btc on ${date} is ${rPrice}`);
+            this.chartLabel.push(date);
+            this.chartValue.push(rPrice);
+          });
+        })
+        .catch((err) => console.error("Fetch error -> ", err));
+    },
+  },
+  beforeMount() {
+    this.loadData();
   },
 };
 </script>
@@ -51,6 +63,5 @@ export default {
 }
 .d-inline-block {
   display: inline-block;
-  margin: 10px;
 }
 </style>
