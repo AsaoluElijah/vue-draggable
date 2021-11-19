@@ -10,7 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
-    "vue-roughviz": "^0.1.2"
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

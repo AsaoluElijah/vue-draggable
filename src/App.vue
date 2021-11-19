@@ -1,67 +1,97 @@
 <template>
-  <div id="app">
-    <div class="d-inline-block">
-      <rough-bar
-        v-if="chartValue.length > 0"
-        :data="{
-          labels: chartLabel,
-          values: chartValue,
-        }"
-        title="BTC - 10 Days"
-        roughness="3"
-        color="#ccc"
-        stroke="black"
-        stroke-width="1"
-        fill-style="zig-zag"
-        fill-weight="2"
-      />
+  <div class="container mt-5 mb-5">
+    <div class="row">
+      <div class="col mx-2 px-2 py-3 bg-light border rounded">
+        <h6>Idea 💡</h6>
+        <draggable
+          class="draggable-list mt-3"
+          :list="tasks.ideas"
+          group="tasks"
+        >
+          <div v-for="(idea, i) in tasks.ideas" :key="i">
+            <div class="bg-white mt- p-2 shadow border rounded">
+              <p>{{ idea }}</p>
+            </div>
+          </div>
+        </draggable>
+      </div>
+      <div class="col mx-2 px-2 py-3 bg-light border rounded">
+        <h6>Todo ✍</h6>
+        <draggable
+          class="draggable-list mt-3"
+          :list="tasks.todos"
+          group="tasks"
+        >
+          <div v-for="(todo, i) in tasks.todos" :key="i">
+            <div class="bg-white mt-2 p-2 shadow border rounded">
+              <p>{{ todo }}</p>
+            </div>
+          </div>
+        </draggable>
+      </div>
+      <div class="col mx-2 px-2 py-3 bg-light border rounded">
+        <h6>In Progress 🗓</h6>
+        <draggable
+          class="draggable-list mt-3"
+          :list="tasks.inProgress"
+          group="tasks"
+        >
+          <div v-for="(task, i) in tasks.inProgress" :key="i">
+            <div class="bg-white mt-2 p-2 shadow border rounded">
+              <p>{{ task }}</p>
+            </div>
+          </div>
+        </draggable>
+      </div>
+      <div class="col mx-2 px-2 py-3 bg-light border rounded">
+        <h6>Ready to go ✅</h6>
+        <draggable
+          class="draggable-list mt-3"
+          :list="tasks.completed"
+          group="tasks"
+        >
+          <div v-for="(task, i) in tasks.completed" :key="i">
+            <div class="bg-white mt-2 p-2 shadow border rounded">
+              <p>{{ task }}</p>
+            </div>
+          </div>
+        </draggable>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { RoughBar } from "vue-roughviz";
+import draggable from "vuedraggable";
 export default {
-  name: "App",
   components: {
-    RoughBar,
+    draggable,
   },
   data() {
     return {
-      chartLabel: [],
-      chartValue: [],
+      tasks: {
+        ideas: ["Migrate codebase to TypeScript"],
+        todos: ["Dockerize App", "Add vue.draggable to project"],
+        inProgress: ["Implement Web3 Features", "Bump to vite.js"],
+        completed: [],
+      },
     };
-  },
-  methods: {
-    async loadData() {
-      await fetch(
-        "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=10&interval=daily"
-      )
-        .then((res) => res.json())
-        .then((rawData) => {
-          console.table(rawData.prices);
-          rawData.prices.map((data) => {
-            let date = new Date(data[0]).toDateString();
-            let rPrice = data[1];
-            console.log(`Price of 1btc on ${date} is ${rPrice}`);
-            this.chartLabel.push(date);
-            this.chartValue.push(rPrice);
-          });
-        })
-        .catch((err) => console.error("Fetch error -> ", err));
-    },
-  },
-  beforeMount() {
-    this.loadData();
   },
 };
 </script>
+
 <style scoped>
-#app {
-  text-align: center;
-  margin-top: 10vh;
+h6 {
+  font-weight: 700;
 }
-.d-inline-block {
-  display: inline-block;
+.col {
+  height: 90vh;
+  overflow: auto;
+}
+.draggable-list {
+  min-height: 10vh;
+}
+.draggable-list > div {
+  cursor: pointer;
 }
 </style>
